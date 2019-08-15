@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Clustering</name>
+    </assembly>
+    <members>
+        <member name="T:Clustering.IClusteringMethod">
+            <summary>クラスタリング手法基本クラス</summary>
+        </member>
+        <member name="M:Clustering.IClusteringMethod.Classify(Algebra.Vector)">
+            <summary>単一サンプルを分類</summary>
+            <param name="vector">サンプルベクタ</param>
+        </member>
+        <member name="M:Clustering.IClusteringMethod.Classify(System.Collections.Generic.IEnumerable{Algebra.Vector})">
+            <summary>複数サンプルを分類</summary>
+            <param name="vectors">サンプルベクタ集合</param>
+        </member>
+        <member name="M:Clustering.IClusteringMethod.Learn(System.Int32,System.Collections.Generic.List{Algebra.Vector}[])">
+            <summary>学習</summary>
+            <param name="vector_dim">サンプルベクタ次元数</param>
+            <param name="vectors_groups">データクラスごとのサンプルベクタ集合</param>
+        </member>
+        <member name="M:Clustering.IClusteringMethod.Initialize">
+            <summary>初期化</summary>
+        </member>
+        <member name="P:Clustering.IClusteringMethod.VectorDim">
+            <summary>サンプルベクタ次元数</summary>
+        </member>
+        <member name="P:Clustering.IClusteringMethod.GroupCount">
+            <summary>分類数</summary>
+        </member>
+        <member name="T:Clustering.KMeansClustering">
+            <summary>k-means++法</summary>
+        </member>
+        <member name="M:Clustering.KMeansClustering.#ctor(System.Int32)">
+            <summary>コンストラクタ</summary>
+            <param name="group_count">データクラス数</param>
+        </member>
+        <member name="P:Clustering.KMeansClustering.GroupCount">
+            <summary>データクラス数</summary>
+        </member>
+        <member name="P:Clustering.KMeansClustering.VectorDim">
+            <summary>ベクトルの次元数</summary>
+        </member>
+        <member name="P:Clustering.KMeansClustering.CenterVectors">
+            <summary>クラスタ中心ベクトル</summary>
+        </member>
+        <member name="M:Clustering.KMeansClustering.Classify(Algebra.Vector)">
+            <summary>単一サンプルを分類</summary>
+            <param name="vector">サンプルベクタ</param>
+        </member>
+        <member name="M:Clustering.KMeansClustering.Classify(System.Collections.Generic.IEnumerable{Algebra.Vector})">
+            <summary>複数サンプルを分類</summary>
+            <param name="vectors">サンプルベクタ集合</param>
+        </member>
+        <member name="M:Clustering.KMeansClustering.Learn(System.Int32,System.Collections.Generic.List{Algebra.Vector}[])">
+            <summary>学習</summary>
+            <param name="vector_dim">サンプルベクタ次元数</param>
+            <param name="vectors_groups">データクラスごとのサンプルベクタ集合</param>
+        </member>
+        <member name="M:Clustering.KMeansClustering.Initialize">
+            <summary>初期化</summary>
+        </member>
+        <member name="M:Clustering.KMeansClustering.NearestVector(Algebra.Vector)">
+            <summary>最近傍のベクトルを探索</summary>
+        </member>
+        <member name="M:Clustering.KMeansClustering.ValidateSample(System.Int32,System.Collections.Generic.List{Algebra.Vector}[])">
+            <summary>サンプルの正当性を検証</summary>
+        </member>
+        <member name="T:Clustering.SequentialMinimalOptimization">
+            <summary>逐次最小問題最適化法</summary>
+        </member>
+        <member name="M:Clustering.SequentialMinimalOptimization.#ctor(Algebra.Vector[],System.Double[],System.Double,System.Func{Algebra.Vector,Algebra.Vector,System.Double})">
+            <summary>コンストラクタ</summary>
+        </member>
+        <member name="P:Clustering.SequentialMinimalOptimization.VectorWeight">
+            <summary>ベクトル重み</summary>
+        </member>
+        <member name="P:Clustering.SequentialMinimalOptimization.Bias">
+            <summary>バイアス</summary>
+        </member>
+        <member name="M:Clustering.SequentialMinimalOptimization.Optimize">
+            <summary>最適化シークエンスを実行</summary>
+        </member>
+        <member name="M:Clustering.SequentialMinimalOptimization.ExamineExample(System.Int32)">
+            <summary>i2と同時に最適化するi1を探索し2パラメータの最適化を実行</summary>
+        </member>
+        <member name="M:Clustering.SequentialMinimalOptimization.TakeStep(System.Int32,System.Int32)">
+            <summary>2パラメータの最適化を実行</summary>
+        </member>
+        <member name="M:Clustering.SequentialMinimalOptimization.ComputeF(Algebra.Vector)">
+            <summary>F値を計算</summary>
+        </member>
+        <member name="T:Clustering.LinearSupportVectorMachine">
+            <summary>線形サポートベクタマシン</summary>
+        </member>
+        <member name="M:Clustering.LinearSupportVectorMachine.#ctor(System.Double)">
+            <summary>コンストラクタ</summary>
+            <param name="cost">誤識別に対するペナルティの大きさ</param>
+        </member>
+        <member name="M:Clustering.LinearSupportVectorMachine.Kernel(Algebra.Vector,Algebra.Vector)">
+            <summary>カーネル関数</summary>
+        </member>
+        <member name="T:Clustering.GaussianSupportVectorMachine">
+            <summary>ガウシアンサポートベクタマシン</summary>
+        </member>
+        <member name="M:Clustering.GaussianSupportVectorMachine.#ctor(System.Double,System.Double)">
+            <param name="cost">誤識別に対するペナルティの大きさ</param>
+            <param name="sigma">ガウシアン関数の尺度パラメータ</param>
+        </member>
+        <member name="P:Clustering.GaussianSupportVectorMachine.Sigma">
+            <summary>ガウシアン関数の尺度パラメータ</summary>
+        </member>
+        <member name="M:Clustering.GaussianSupportVectorMachine.Kernel(Algebra.Vector,Algebra.Vector)">
+            <summary>カーネル関数</summary>
+        </member>
+        <member name="T:Clustering.SupportVectorMachine">
+            <summary>サポートベクタマシン</summary>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.#ctor(System.Double)">
+            <summary>コンストラクタ</summary>
+            <param name="cost">誤識別に対するペナルティの大きさ</param>
+        </member>
+        <member name="P:Clustering.SupportVectorMachine.GroupCount">
+            <summary>データクラス数</summary>
+            <remarks>SVMは常に2</remarks>
+        </member>
+        <member name="P:Clustering.SupportVectorMachine.VectorDim">
+            <summary>ベクトルの次元数</summary>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.Classify(Algebra.Vector)">
+            <summary>単一サンプルを分類</summary>
+            <param name="vector">サンプルベクタ</param>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.Classify(Algebra.Vector,System.Double)">
+            <summary>単一サンプルを分類</summary>
+            <param name="vector">サンプルベクタ</param>
+            <param name="threshold">弁別しきい値</param>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.Classify(System.Collections.Generic.IEnumerable{Algebra.Vector})">
+            <summary>複数サンプルを分類</summary>
+            <param name="vectors">サンプルベクタ集合</param>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.Classify(System.Collections.Generic.IEnumerable{Algebra.Vector},System.Double)">
+            <summary>複数サンプルを分類</summary>
+            <param name="vectors">サンプルベクタ集合</param>
+            <param name="threshold">弁別しきい値</param>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.ClassifyRaw(Algebra.Vector)">
+            <summary>単一サンプルの識別値</summary>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.ClassifyRaw(System.Collections.Generic.IEnumerable{Algebra.Vector})">
+            <summary>複数サンプルの識別値</summary>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.Learn(System.Int32,System.Collections.Generic.List{Algebra.Vector}[])">
+            <summary>学習</summary>
+            <param name="vector_dim">サンプルベクタ次元数</param>
+            <param name="vectors_groups">データクラスごとのサンプルベクタ集合</param>
+            <remarks>サンプルベクタ集合は正例と負例の2つ</remarks>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.Kernel(Algebra.Vector,Algebra.Vector)">
+            <summary>カーネル関数</summary>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.Initialize">
+            <summary>初期化</summary>
+        </member>
+        <member name="M:Clustering.SupportVectorMachine.ValidateSample(System.Int32,System.Collections.Generic.List{Algebra.Vector}[])">
+            <summary>サンプルの正当性を検証</summary>
+        </member>
+    </members>
+</doc>
