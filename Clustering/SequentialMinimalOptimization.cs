@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Algebra;
 
 namespace Clustering {
     /// <summary>逐次最小問題最適化法</summary>
     public class SequentialMinimalOptimization {
-        private int vectors;
-        private Vector[] inputs;
-        private double[] outputs;
-
-        private double bias, cost, tolerance, epsilon;
+        private readonly int vectors;
+        private readonly Vector[] inputs;
+        private readonly double[] outputs;
+        private readonly double cost;
+        private double tolerance;
+        private double epsilon;
         private double[] a, errors;
         private Random random;
-        private Func<Vector, Vector, double> kernel;
+        private readonly Func<Vector, Vector, double> kernel;
 
         /// <summary>コンストラクタ</summary>
         public SequentialMinimalOptimization(Vector[] inputs, double[] outputs, double cost, Func<Vector, Vector, double> kernel) {
@@ -23,17 +25,17 @@ namespace Clustering {
         }
 
         /// <summary>ベクトル重み</summary>
-        public double[] VectorWeight => a;
+        public ReadOnlyCollection<double> VectorWeight => Array.AsReadOnly(a);
 
         /// <summary>バイアス</summary>
-        public double Bias => bias;
+        public double Bias { get; private set; }
 
         /// <summary>最適化シークエンスを実行</summary>
         public void Optimize() {
             errors = new double[vectors];
             random = new Random(0);
             a = new double[vectors];
-            bias = 0;
+            Bias = 0;
             tolerance = 1e-3;
             epsilon = 1e-3;
 
@@ -159,8 +161,8 @@ namespace Clustering {
             else {
                 double l1 = a1_old + s * (a2_old - clip_l);
                 double h1 = a1_old + s * (a2_old - clip_h);
-                double f1 = y1 * (e1 + bias) - a1_old * k11 - s * a2_old * k12;
-                double f2 = y2 * (e2 + bias) - a2_old * k22 - s * a1_old * k12;
+                double f1 = y1 * (e1 + Bias) - a1_old * k11 - s * a2_old * k12;
+                double f2 = y2 * (e2 + Bias) - a2_old * k22 - s * a1_old * k12;
                 double obj_l = -0.5 * l1 * l1 * k11 - 0.5 * clip_l * clip_l * k22 - s * clip_l * l1 * k12 - l1 * f1 - clip_l * f2;
                 double obj_h = -0.5 * h1 * h1 * k11 - 0.5 * clip_h * clip_h * k22 - s * clip_h * h1 * k12 - h1 * f1 - clip_h * f2;
                 if(obj_l > obj_h + epsilon)
@@ -187,22 +189,23 @@ namespace Clustering {
 
             // バイアスを更新
             double b1 = 0, b2 = 0;
-            double new_bias = 0, delta_bias;
-            if(a1_new > 0 && a1_new < cost) {
-                new_bias = e1 + y1 * (a1_new - a1_old) * k11 + y2 * (a2_new - a2_old) * k12 + bias;
+            double delta_bias;
+            double new_bias;
+            if (a1_new > 0 && a1_new < cost) {
+                new_bias = e1 + y1 * (a1_new - a1_old) * k11 + y2 * (a2_new - a2_old) * k12 + Bias;
             }
             else {
-                if(a2_new > 0 && a2_new < cost) {
-                    new_bias = e2 + y1 * (a1_new - a1_old) * k12 + y2 * (a2_new - a2_old) * k22 + bias;
+                if (a2_new > 0 && a2_new < cost) {
+                    new_bias = e2 + y1 * (a1_new - a1_old) * k12 + y2 * (a2_new - a2_old) * k22 + Bias;
                 }
                 else {
-                    b1 = e1 + y1 * (a1_new - a1_old) * k11 + y2 * (a2_new - a2_old) * k12 + bias;
-                    b2 = e2 + y1 * (a1_new - a1_old) * k12 + y2 * (a2_new - a2_old) * k22 + bias;
+                    b1 = e1 + y1 * (a1_new - a1_old) * k11 + y2 * (a2_new - a2_old) * k12 + Bias;
+                    b2 = e2 + y1 * (a1_new - a1_old) * k12 + y2 * (a2_new - a2_old) * k22 + Bias;
                     new_bias = (b1 + b2) / 2;
                 }
             }
-            delta_bias = new_bias - bias;
-            bias = new_bias;
+            delta_bias = new_bias - Bias;
+            Bias = new_bias;
 
             // 誤差値を更新
             double t1 = y1 * (a1_new - a1_old);
@@ -224,7 +227,7 @@ namespace Clustering {
 
         /// <summary>F値を計算</summary>
         private double ComputeF(Vector v) {
-            double sum = -bias;
+            double sum = -Bias;
             for(int i = 0; i < inputs.Length; i++) {
                 if(a[i] > 0)
                     sum += a[i] * outputs[i] * kernel(inputs[i], v);

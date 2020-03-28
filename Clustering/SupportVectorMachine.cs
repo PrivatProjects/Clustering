@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Algebra;
 
@@ -62,7 +63,8 @@ namespace Clustering {
             public double Weight { get; set; }
         }
 
-        double bias, cost;
+        private double bias;
+        private readonly double cost;
         List<WeightVector> support_vectors;
 
         /// <summary>コンストラクタ</summary>
@@ -158,10 +160,10 @@ namespace Clustering {
             smo.Optimize();
 
             bias = smo.Bias;
-            double[] vector_weight = smo.VectorWeight;
+            ReadOnlyCollection<double> vector_weight = smo.VectorWeight;
             
             //サポートベクターの格納
-            for(int i = 0; i < vector_weight.Length; i++) {
+            for(int i = 0; i < vector_weight.Count; i++) {
                 if(vector_weight[i] > epsilon) {
                     var wvec = new WeightVector { Weight = vector_weight[i] * outputs[i], Vector = (Vector)inputs[i].Clone() };
 
